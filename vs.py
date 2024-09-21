@@ -1,37 +1,36 @@
-import pandas as pd
-import random
 import numpy as np
+import pandas as pd 
+import random
 import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+#create a dataset
+np.random.seed(0)
+mas_day = []
+mas_time=[]
+check =[]
+mas_sales=[]
+for i in range(0,15):
+    a=random.choice(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'])
+    b=random.choice(['00:00-4:00', '4:00-8:00', '8:00-12:00', '12:00-16:00', '16:00-18:00', '18:00-22:00', '22:00-23:59'])
+    c=random.randint(1, 100)
+    a=str(a)
+    b=str(b)
+    c=int(c)
+    if [a,b,c] not in check:
+        mas_day.append(a)
+        mas_time.append(b)
+        mas_sales.append(c)
+        check.append([a,b,c])
+        print([a,b,c])
+data = {'day': mas_day,
+ 'time': mas_time,
+ 'sales': mas_sales
+ }
+print(data)
 
-
-from sklearn.model_selection import train_test_split
-
-
-
-seed = random.randint(0,1000000)
-data = pd.read_csv('train.csv')
-data.fillna(0, inplace=True)
-df = data[['Тип_жилья','Город', 'Площадь', 'Этаж', 'Размер_участка', 'Кво_комнат', 'Цена']]
-X = data[['Кво_комнат']]
-Y = data['Цена']
-train_x, test_x, train_y, test_y = train_test_split(X,Y, test_size =0.25,random_state=seed)
-#plt.figure(figsize=(5,5))
-#plt.scatter(train_x,train_y)
-lr=LinearRegression()
-lr.fit(train_x, train_y)
-k = lr.coef_[0]
-b=lr.intercept_
-
-def f_line(x):
-    return k*x+b
-
-x_ln = [1,60]
-y_ln = [int(f_line(i)) for i in x_ln]
-#plt.plot(x_ln,y_ln)
-#plt.show()
-
-y_test_pr = lr.predict(test_x)
-print(k,b)
+df = pd.DataFrame(data,columns=['day','sales','sales'])
+print(df)
+df = df.pivot(index='day', columns='sales', values='sales')
+print(df)
+# sns.heatmap(df, linewidths=.5,annot=True) 
+# plt.show()
